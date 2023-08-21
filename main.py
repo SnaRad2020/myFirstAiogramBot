@@ -1,5 +1,5 @@
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.types import ReplyKeyboardMarkup
+from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 from dotenv import load_dotenv
 import os
 
@@ -26,6 +26,14 @@ admin_panel = ReplyKeyboardMarkup(resize_keyboard=True)
 admin_panel.add("Сделать рассылку").add("Добавить песню").add("Удалить песню").add("Назад")
 
 
+song_list = InlineKeyboardMarkup(row_width=1)
+song_list.add(
+    InlineKeyboardButton(text='Бананафилы', callback_data='song_bananafils'),
+    InlineKeyboardButton(text='Пёс Барбос', callback_data='song_dog_barbos'),
+    InlineKeyboardButton(text='Каждый день', callback_data='song_every_day')
+)
+
+
 #Команда /start
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):
@@ -35,6 +43,12 @@ async def cmd_start(message: types.Message):
                          reply_markup=main)
     if message.from_user.id == adm_id:
         await message.answer('Вы авторизовались, как администратор', reply_markup=main_admin)
+
+
+#команда, которая отправляет в группу файл или фото, а человеку отправившему это - id группы в которую был этот стикер отправлен (бот должен быть администратором группы)
+@dp.message_handler(content_types=['sticker'])
+async def forward_mesage(message: types.Message):
+    await message.answer(message.sticker.file_id)
 
 
 #Команда ID
@@ -55,7 +69,7 @@ async def admin_panel_admin(message: types.Message):
 #Наши песни
 @dp.message_handler(text='Наши песни')
 async def our_songs(message: types.Message):
-    await message.answer(f'Наш YouTube канал: {youtube_URL}')
+    await message.answer(f'Наш YouTube канал: {youtube_URL}', reply_markup=song_list)
 
 
 #Контакты
