@@ -5,7 +5,7 @@ import os
 
 
 load_dotenv() #загрузка библиотеки dotenv в которой лежит токен и другие важные данные
-bot = Bot('6159859028:AAFhenNkeG1SY1_MeanQKR1HilTqZjvBzi8')
+bot = Bot(os.getenv('TOKEN'))
 dp = Dispatcher(bot=bot)
 adm_id = int(os.getenv('ADMIN_ID'))
 youtube_URL = os.getenv('URL')
