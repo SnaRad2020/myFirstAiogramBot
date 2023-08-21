@@ -1,5 +1,5 @@
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
+from app import keyboards as kb
 from dotenv import load_dotenv
 import os
 
@@ -11,26 +11,7 @@ adm_id = int(os.getenv('ADMIN_ID'))
 youtube_URL = os.getenv('URL')
 email = os.getenv('EMAIL')
 
-#Меню
-main = ReplyKeyboardMarkup(resize_keyboard=True)
-main.add('Наши песни').add('Контакты')
 
-
-#Админ-меню
-main_admin = ReplyKeyboardMarkup(resize_keyboard=True)
-main_admin.add("Наши песни").add("Контакты").add("Админ-панель")
-
-
-#Админ-панель
-admin_panel = ReplyKeyboardMarkup(resize_keyboard=True)
-admin_panel.add("Сделать рассылку").add("Добавить песню").add("Удалить песню").add("Назад")
-#Список песен
-song_list = InlineKeyboardMarkup(row_width=1)
-song_list.add(
-    InlineKeyboardButton(text='Бананафилы', url='https://www.youtube.com/watch?v=K7fWE2dDsRE&ab'),
-    InlineKeyboardButton(text='Пёс Барбос', url='https://www.youtube.com/watch?v=PFsMwaeV8Mk&ab'),
-    InlineKeyboardButton(text='Каждый день', url='https://www.youtube.com/watch?v=6h2fVZ70ytI&ab')
-)
 
 
 #Команда /start
@@ -39,18 +20,18 @@ async def cmd_start(message: types.Message):
     await message.answer_sticker(
         'CAACAgIAAxkBAAOCZNyhd7SU6MQLbGwCtiVCMYDFOJwAAtUiAAI68PhLqlYXuDuLjRMwBA')  # бот отправляет стикер перед приветствия
     await message.answer(f'Привет, {message.from_user.first_name}, я бот разработанный группой "Содержимое"',
-                         reply_markup=main)
+                         reply_markup=kb.main)
     if message.from_user.id == adm_id:
-        await message.answer('Вы авторизовались, как администратор', reply_markup=main_admin)
+        await message.answer('Вы авторизовались, как администратор', reply_markup=kb.main_admin)
 
 
 #Ещё одно меню
 @dp.message_handler(text='Назад')
 async def main_menu(message: types.Message):
     if message.from_user.id == adm_id:
-        await message.answer('Вы авторизовались, как администратор', reply_markup=main_admin)
+        await message.answer('Вы авторизовались, как администратор', reply_markup=kb.main_admin)
     else:
-        await message.answer('Вы попали в главное меню', reply_markup=main)
+        await message.answer('Вы попали в главное меню', reply_markup=kb.main)
 
 
 #команда, которая отправляет в группу файл или фото, а человеку отправившему это - id группы в которую был этот стикер отправлен (бот должен быть администратором группы)
@@ -69,7 +50,7 @@ async def ID(message: types.Message):
 @dp.message_handler(text='Админ-панель')
 async def admin_panel_admin(message: types.Message):
     if message.from_user.id == adm_id:
-        await message.answer(f'Вы вошли в админ-панель', reply_markup=admin_panel)
+        await message.answer(f'Вы вошли в админ-панель', reply_markup=kb.admin_panel)
     else:
         await message.answer('Вы не авторизированы.')
 
@@ -77,7 +58,7 @@ async def admin_panel_admin(message: types.Message):
 #Наши песни
 @dp.message_handler(text='Наши песни')
 async def our_songs(message: types.Message):
-    await message.answer(f'Наш YouTube канал: {youtube_URL}', reply_markup=song_list)
+    await message.answer(f'Наш YouTube канал: {youtube_URL}', reply_markup=kb.song_list)
 
 
 #Контакты
