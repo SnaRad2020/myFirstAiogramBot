@@ -2,7 +2,6 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ReplyKeyboardMarkup
 from dotenv import load_dotenv
 import os
-import json
 
 
 load_dotenv() #загрузка библиотеки dotenv в которой лежит токен и другие важные данные
