@@ -24,7 +24,6 @@ main_admin.add("Наши песни").add("Контакты").add("Админ-п
 #Админ-панель
 admin_panel = ReplyKeyboardMarkup(resize_keyboard=True)
 admin_panel.add("Сделать рассылку").add("Добавить песню").add("Удалить песню").add("Назад")
-
 #Список песен
 song_list = InlineKeyboardMarkup(row_width=1)
 song_list.add(
@@ -43,6 +42,15 @@ async def cmd_start(message: types.Message):
                          reply_markup=main)
     if message.from_user.id == adm_id:
         await message.answer('Вы авторизовались, как администратор', reply_markup=main_admin)
+
+
+#Ещё одно меню
+@dp.message_handler(text='Назад')
+async def main_menu(message: types.Message):
+    if message.from_user.id == adm_id:
+        await message.answer('Вы авторизовались, как администратор', reply_markup=main_admin)
+    else:
+        await message.answer('Вы попали в главное меню', reply_markup=main)
 
 
 #команда, которая отправляет в группу файл или фото, а человеку отправившему это - id группы в которую был этот стикер отправлен (бот должен быть администратором группы)
