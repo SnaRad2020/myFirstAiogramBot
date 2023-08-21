@@ -51,7 +51,7 @@ async def forward_mesage(message: types.Message):
     await message.answer(message.sticker.file_id)
 
 
-#Команда ID
+#ID
 @dp.message_handler(text='ID')
 async def ID(message: types.Message):
     await message.answer(f'{message.from_user.id}')
