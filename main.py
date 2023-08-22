@@ -1,5 +1,8 @@
 from aiogram import Bot, Dispatcher, executor, types
 from app import keyboards as kb
+from app import database as db
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.dispatcher import FSMContext
 from dotenv import load_dotenv
 import os
 
@@ -14,11 +17,17 @@ email = os.getenv('EMAIL')
 
 
 
+#АСИНХРОННАЯ команда, которая запускает database.py
+async def on_startup(_):
+    await db.db_start()
+    print('Бот успешно запущен!')
+
+
 #Команда /start
 @dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):
     await message.answer_sticker(
-        'CAACAgIAAxkBAAOCZNyhd7SU6MQLbGwCtiVCMYDFOJwAAtUiAAI68PhLqlYXuDuLjRMwBA')  # бот отправляет стикер перед приветствия
+        'CAACAgIAAxkBAAIBzWTkS1pTNKW76soWJWrFWClkQDmAAAINLgACfgmQSfqupUOm1F7UMAQ')  # бот отправляет стикер перед приветствия
     await message.answer(f'Привет, {message.from_user.first_name}, я бот разработанный группой "Содержимое"',
                          reply_markup=kb.main)
     if message.from_user.id == adm_id:
@@ -73,4 +82,4 @@ async def answer(message: types.Message):
 
 #executor
 if __name__ == '__main__':
-    executor.start_polling(dp)
+    executor.start_polling(dp, on_startup=on_startup)
